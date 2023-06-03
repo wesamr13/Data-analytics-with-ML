@@ -1,4 +1,4 @@
-using the filter method on the logistic regression model for the customer bank churn.
+#using the filter method on the logistic regression model for the customer bank churn.
 
 Steps:
 Load the dataset into a pandas dataframe.
@@ -39,3 +39,42 @@ y_pred = clf.predict(X_test)
 # Evaluate the accuracy of the model
 accuracy = accuracy_score(y_test, y_pred)
 print("Accuracy:", accuracy)
+
+
+#using the correlation matrix on the logistic regression model for the customer bank churn.
+
+
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LogisticRegression
+from sklearn.feature_selection import SelectKBest
+from sklearn.feature_selection import chi2
+
+# Load the dataset
+df = pd.read_csv('bank_customer_churn.csv')
+
+# Split the data into features and target
+X = df.iloc[:, :-1]
+y = df.iloc[:, -1]
+
+# Calculate the correlation matrix
+corr_matrix = X.corr()
+
+# Select the best features based on the correlation matrix
+best_features = SelectKBest(score_func=chi2, k=5)
+fit = best_features.fit(X, y)
+
+# Get the indices of the best features
+best_features_indices = fit.get_support(indices=True)
+
+# Get the names of the best features
+best_features_names = X.columns[best_features_indices]
+
+# Use the best features to train the logistic regression model
+X_new = X[best_features_names]
+model = LogisticRegression()
+model.fit(X_new, y)
+
+In this code, we first calculate the correlation matrix between the features. 
+Then we use the SelectKBest function from the sklearn.feature_selection module to select the k best features based on the correlation matrix using the chi2 score function.
+Finally, we train the logistic regression model using only the best features.
