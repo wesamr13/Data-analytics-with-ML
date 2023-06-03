@@ -1,0 +1,41 @@
+using the filter method on the logistic regression model for the customer bank churn.
+
+Steps:
+Load the dataset into a pandas dataframe.
+Split the data into features (X) and target (y).
+Apply feature selection using a filter method such as Variance Threshold or Correlation Matrix.
+Train the logistic regression model on the selected features.
+Evaluate the performance of the model using metrics such as accuracy, precision, recall, or f1-score.
+
+python code:
+
+import pandas as pd
+from sklearn.feature_selection import VarianceThreshold
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+
+# Load the data into a pandas dataframe
+df = pd.read_csv("bank_customer_churn.csv")
+
+# Split the data into features and target
+X = df.drop("Churn", axis=1)
+y = df["Churn"]
+
+# Apply Variance Threshold feature selection
+selector = VarianceThreshold()
+X_selected = selector.fit_transform(X)
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X_selected, y, test_size=0.2)
+
+# Train the logistic regression model
+clf = LogisticRegression()
+clf.fit(X_train, y_train)
+
+# Make predictions on the test data
+y_pred = clf.predict(X_test)
+
+# Evaluate the accuracy of the model
+accuracy = accuracy_score(y_test, y_pred)
+print("Accuracy:", accuracy)
